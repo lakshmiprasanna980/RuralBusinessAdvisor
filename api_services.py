@@ -7,175 +7,88 @@ import requests
 
 def get_location(district, state):
 
-    url = (
-        "https://geocoding-api.open-meteo.com/"
-        "v1/search"
-    )
-
-    # Clean user input
     district = (district or "").strip()
     state = (state or "").strip()
 
     if not district or not state:
-
-        print(
-            "District or state is empty."
-        )
-
+        print("District or state is empty.")
         return None
 
-    # First search: district + state
-    search_name = f"{district}, {state}"
-
-    params = {
-        "name": search_name,
-        "count": 10,
-        "language": "en",
-        "format": "json",
-        "countryCode": "IN"
+    # Andhra Pradesh district-level fallback coordinates
+    # Used when the external geocoding service is unavailable.
+    ap_coordinates = {
+        "guntur": (16.3067, 80.4365),
+        "krishna": (16.5449, 81.0640),
+        "eluru": (16.7107, 81.0952),
+        "ntr": (16.5062, 80.6480),
+        "palnadu": (16.2354, 80.0499),
+        "bapatla": (15.9044, 80.4675),
+        "prakasam": (15.5057, 80.0499),
+        "spsr nellore": (14.4426, 79.9865),
+        "nellore": (14.4426, 79.9865),
+        "tirupati": (13.6288, 79.4192),
+        "chittoor": (13.2172, 79.1003),
+        "annamayya": (14.0600, 78.7500),
+        "ysr kadapa": (14.4674, 78.8241),
+        "kadapa": (14.4674, 78.8241),
+        "kurnool": (15.8281, 78.0373),
+        "nandyal": (15.4786, 78.4831),
+        "ananthapur": (14.6819, 77.6006),
+        "anantapur": (14.6819, 77.6006),
+        "sri sathya sai": (14.2306, 77.6141),
+        "srikakulam": (18.2949, 83.8938),
+        "vizianagaram": (18.1067, 83.3956),
+        "visakhapatnam": (17.6868, 83.2185),
+        "alluri sitharama raju": (17.7000, 81.9000),
+        "anakapalli": (17.6913, 83.0039),
+        "kakinada": (16.9891, 82.2475),
+        "east godavari": (16.9891, 82.2475),
+        "konaseema": (16.5800, 82.0000),
+        "west godavari": (16.7107, 81.0952)
     }
 
+    # First try the online geocoding service
     try:
+
+        url = "https://geocoding-api.open-meteo.com/v1/search"
+
+        params = {
+            "name": f"{district}, {state}",
+            "count": 10,
+            "language": "en",
+            "format": "json",
+            "countryCode": "IN"
+        }
 
         response = requests.get(
             url,
             params=params,
-            timeout=15
+            timeout=8
         )
 
         response.raise_for_status()
 
         data = response.json()
 
-        results = data.get(
-            "results",
-            []
-        )
+        results = data.get("results", [])
 
-        print(
-            "Location API results:",
-            len(results)
-        )
+        print("Location API results:", len(results))
 
-
-        # =================================================
-        # FALLBACK SEARCH
-        # =================================================
-
-        if not results:
-
-            print(
-                "Trying district-only location search..."
-            )
-
-            params["name"] = district
-
-            response = requests.get(
-                url,
-                params=params,
-                timeout=15
-            )
-
-            response.raise_for_status()
-
-            data = response.json()
-
-            results = data.get(
-                "results",
-                []
-            )
-
-            print(
-                "Fallback location results:",
-                len(results)
-            )
-
-
-        if not results:
-
-            print(
-                "Location not found."
-            )
-
-            return None
-
-
-        # =================================================
-        # FIND STATE MATCH
-        # =================================================
-
-        state_lower = (
-            state
-            .strip()
-            .lower()
-        )
+        state_lower = state.lower()
 
         for result in results:
 
-            location_name = (
-                result.get(
-                    "name",
-                    ""
-                )
-                or ""
-            )
-
             location_state = (
-                result.get(
-                    "admin1",
-                    ""
-                )
-                or ""
-            )
+                result.get("admin1", "") or ""
+            ).strip().lower()
 
-            country = (
-                result.get(
-                    "country",
-                    ""
-                )
-                or ""
-            )
-
-            print(
-                "Checking location:",
-                location_name,
-                "| State:",
-                location_state,
-                "| Country:",
-                country
-            )
-
-            location_state_lower = (
-                location_state
-                .strip()
-                .lower()
-            )
-
-
-            # Exact state match
-            if (
-                location_state_lower
-                ==
-                state_lower
-            ):
+            if location_state == state_lower:
 
                 location = {
-
-                    "name":
-                        location_name,
-
-                    "state":
-                        location_state,
-
-                    "latitude":
-                        result.get(
-                            "latitude"
-                        ),
-
-                    "longitude":
-                        result.get(
-                            "longitude"
-                        )
+                    "name": result.get("name"),
+                    "state": result.get("admin1"),
+                    "latitude": result.get("latitude"),
+                    "longitude": result.get("longitude")
                 }
 
                 print(
@@ -187,235 +100,44 @@ def get_location(district, state):
 
                 return location
 
+    except Exception as e:
 
-        # =================================================
-        # STATE ALIAS CHECK
-        # =================================================
-
-        state_aliases = {
-
-            "andhra pradesh":
-                [
-                    "andhra pradesh"
-                ],
-
-            "telangana":
-                [
-                    "telangana"
-                ],
-
-            "tamil nadu":
-                [
-                    "tamil nadu",
-                    "tamil nadu state"
-                ],
-
-            "karnataka":
-                [
-                    "karnataka"
-                ],
-
-            "kerala":
-                [
-                    "kerala"
-                ],
-
-            "odisha":
-                [
-                    "odisha",
-                    "orissa"
-                ],
-
-            "west bengal":
-                [
-                    "west bengal"
-                ],
-
-            "uttar pradesh":
-                [
-                    "uttar pradesh"
-                ],
-
-            "madhya pradesh":
-                [
-                    "madhya pradesh"
-                ],
-
-            "maharashtra":
-                [
-                    "maharashtra"
-                ],
-
-            "gujarat":
-                [
-                    "gujarat"
-                ],
-
-            "rajasthan":
-                [
-                    "rajasthan"
-                ],
-
-            "bihar":
-                [
-                    "bihar"
-                ],
-
-            "punjab":
-                [
-                    "punjab"
-                ],
-
-            "haryana":
-                [
-                    "haryana"
-                ],
-
-            "assam":
-                [
-                    "assam"
-                ],
-
-            "jharkhand":
-                [
-                    "jharkhand"
-                ],
-
-            "chhattisgarh":
-                [
-                    "chhattisgarh"
-                ]
-        }
-
-
-        aliases = state_aliases.get(
-            state_lower,
-            [state_lower]
+        print(
+            "Online location service unavailable:",
+            repr(e)
         )
 
+    # Fallback for Andhra Pradesh
+    if state.lower() in [
+        "andhra pradesh",
+        "andhrapradesh"
+    ]:
 
-        for result in results:
+        district_key = district.lower()
 
-            location_state = (
-                result.get(
-                    "admin1",
-                    ""
-                )
-                or ""
+        if district_key in ap_coordinates:
+
+            latitude, longitude = ap_coordinates[district_key]
+
+            location = {
+                "name": district,
+                "state": "Andhra Pradesh",
+                "latitude": latitude,
+                "longitude": longitude
+            }
+
+            print(
+                "Using Andhra Pradesh district fallback:",
+                district,
+                latitude,
+                longitude
             )
 
-            location_state_lower = (
-                location_state
-                .strip()
-                .lower()
-            )
+            return location
 
-            if any(
-                alias in location_state_lower
-                or
-                location_state_lower in alias
-                for alias in aliases
-            ):
+    print("Location not found.")
 
-                location = {
-
-                    "name":
-                        result.get(
-                            "name"
-                        ),
-
-                    "state":
-                        result.get(
-                            "admin1"
-                        ),
-
-                    "latitude":
-                        result.get(
-                            "latitude"
-                        ),
-
-                    "longitude":
-                        result.get(
-                            "longitude"
-                        )
-                }
-
-                print(
-                    "Location found using state alias:",
-                    location["name"],
-                    "-",
-                    location["state"]
-                )
-
-                return location
-
-
-        # =================================================
-        # FINAL FALLBACK
-        # =================================================
-
-        result = results[0]
-
-        location = {
-
-            "name":
-                result.get(
-                    "name"
-                ),
-
-            "state":
-                result.get(
-                    "admin1"
-                ),
-
-            "latitude":
-                result.get(
-                    "latitude"
-                ),
-
-            "longitude":
-                result.get(
-                    "longitude"
-                )
-        }
-
-        print(
-            "Location found using fallback:",
-            location["name"],
-            "-",
-            location["state"]
-        )
-
-        return location
-
-
-    except requests.exceptions.Timeout:
-
-        print(
-            "Location API timed out."
-        )
-
-        return None
-
-
-    except requests.exceptions.RequestException as e:
-
-        print(
-            "Location API error:",
-            e
-        )
-
-        return None
-
-
-    except ValueError:
-
-        print(
-            "Location API returned invalid JSON."
-        )
-
-        return None
-
+    return None
 
 # =================================================
 # WEATHER API
