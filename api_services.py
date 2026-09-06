@@ -145,121 +145,108 @@ def get_location(district, state):
 
 def get_weather(latitude, longitude):
 
-    url = (
-        "https://api.open-meteo.com/"
-        "v1/forecast"
-    )
+    url = "https://api.open-meteo.com/v1/forecast"
 
     params = {
-
         "latitude": latitude,
-
         "longitude": longitude,
-
-        "current":
+        "current": (
             "temperature_2m,"
             "relative_humidity_2m,"
             "precipitation,"
-            "weather_code",
-
-        "daily":
+            "weather_code"
+        ),
+        "daily": (
             "temperature_2m_max,"
             "temperature_2m_min,"
-            "precipitation_sum",
-
+            "precipitation_sum"
+        ),
         "forecast_days": 3,
-
         "timezone": "auto"
     }
 
     try:
 
+        print(
+            "REQUESTING WEATHER:",
+            latitude,
+            longitude
+        )
+
         response = requests.get(
             url,
             params=params,
+            headers={
+                "User-Agent": "RuralBusinessAdvisor/1.0"
+            },
             timeout=15
+        )
+
+        print(
+            "Weather API status:",
+            response.status_code
         )
 
         response.raise_for_status()
 
         data = response.json()
 
-        current = data.get(
-            "current",
-            {}
-        )
+        current = data.get("current", {})
+        daily = data.get("daily", {})
 
-        daily = data.get(
-            "daily",
-            {}
-        )
+        weather = {
+            "temperature": current.get(
+                "temperature_2m"
+            ),
 
+            "humidity": current.get(
+                "relative_humidity_2m"
+            ),
 
-        print(
-            "Weather data received."
-        )
+            "precipitation": current.get(
+                "precipitation"
+            ),
 
+            "weather_code": current.get(
+                "weather_code"
+            ),
 
-        return {
+            "max_temperature": daily.get(
+                "temperature_2m_max",
+                [None]
+            )[0],
 
-            "temperature":
-                current.get(
-                    "temperature_2m"
-                ),
+            "min_temperature": daily.get(
+                "temperature_2m_min",
+                [None]
+            )[0],
 
-            "humidity":
-                current.get(
-                    "relative_humidity_2m"
-                ),
-
-            "precipitation":
-                current.get(
-                    "precipitation"
-                ),
-
-            "weather_code":
-                current.get(
-                    "weather_code"
-                ),
-
-            "max_temperature":
-                daily.get(
-                    "temperature_2m_max",
-                    [None]
-                )[0],
-
-            "min_temperature":
-                daily.get(
-                    "temperature_2m_min",
-                    [None]
-                )[0],
-
-            "rain_forecast":
-                daily.get(
-                    "precipitation_sum",
-                    [None]
-                )[0]
+            "rain_forecast": daily.get(
+                "precipitation_sum",
+                [None]
+            )[0]
         }
 
+        print(
+            "WEATHER RESULT:",
+            weather
+        )
+
+        return weather
 
     except requests.exceptions.Timeout:
 
-        print(
-            "Weather API timed out."
-        )
-
+        print("Weather API timed out.")
         return None
-
 
     except requests.exceptions.RequestException as e:
 
         print(
-            "Weather API error:",
-            e
+            "Weather API request error:",
+            repr(e)
         )
 
         return None
-
 
     except ValueError:
 
@@ -269,6 +256,14 @@ def get_weather(latitude, longitude):
 
         return None
 
+    except Exception as e:
+
+        print(
+            "Unexpected weather error:",
+            repr(e)
+        )
+
+        return None
 
 # =================================================
 # LOCAL MARKET / NEARBY PLACES
