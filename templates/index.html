@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Rural Business Advisor</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="header">
+
+        <h1>
+            🌾 Rural Business Advisor
+        </h1>
+
+        <p>
+            AI-Driven Hyper-Local Business
+            Advisory and Financial Structuring
+            Assistant
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         ENTREPRENEUR FORM
+         ===================================================== -->
+
+    <div class="card">
+
+        <h2>
+            👤 Entrepreneur Details
+        </h2>
+
+
+        <form
+            action="/analyze"
+            method="POST"
+        >
+
+
+            <!-- =================================================
+                 NAME
+                 ================================================= -->
+
+            <label for="name">
+                Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+                required
+            >
+
+
+            <!-- =================================================
+                 VILLAGE
+                 ================================================= -->
+
+            <label for="village">
+                Village
+            </label>
+
+            <input
+                type="text"
+                id="village"
+                name="village"
+                placeholder="Enter your village"
+                required
+            >
+
+
+            <!-- =================================================
+                 DISTRICT
+                 ================================================= -->
+
+            <label for="district">
+                District
+            </label>
+
+            <input
+                type="text"
+                id="district"
+                name="district"
+                placeholder="Example: Guntur"
+                required
+            >
+
+
+            <!-- =================================================
+                 STATE
+                 ================================================= -->
+
+            <label for="state">
+                State
+            </label>
+
+            <input
+                type="text"
+                id="state"
+                name="state"
+                placeholder="Example: Andhra Pradesh"
+                required
+            >
+
+
+            <!-- =================================================
+                 BUSINESS TYPE
+                 ================================================= -->
+
+            <label for="business">
+                Business Type
+            </label>
+
+            <select
+                id="business"
+                name="business"
+                required
+            >
+
+                <option value="">
+                    Select Business
+                </option>
+
+                <option value="Farmer">
+                    Farmer
+                </option>
+
+                <option value="Vegetable Seller">
+                    Vegetable Seller
+                </option>
+
+                <option value="Fruit Seller">
+                    Fruit Seller
+                </option>
+
+                <option value="Dairy Farmer">
+                    Dairy Farmer
+                </option>
+
+                <option value="Milk Seller">
+                    Milk Seller
+                </option>
+
+                <option value="Grocery Shop">
+                    Grocery Shop
+                </option>
+
+            </select>
+
+
+            <!-- =================================================
+                 INVESTMENT
+                 ================================================= -->
+
+            <label for="investment">
+                Available Investment (₹)
+            </label>
+
+            <input
+                type="number"
+                id="investment"
+                name="investment"
+                min="0"
+                placeholder="Enter investment amount"
+                required
+            >
+
+
+            <!-- =================================================
+                 EXPERIENCE
+                 ================================================= -->
+
+            <label for="experience">
+                Experience
+            </label>
+
+            <select
+                id="experience"
+                name="experience"
+                required
+            >
+
+                <option value="">
+                    Select Experience
+                </option>
+
+                <option value="Beginner">
+                    Beginner
+                </option>
+
+                <option value="Some Experience">
+                    Some Experience
+                </option>
+
+                <option value="Experienced">
+                    Experienced
+                </option>
+
+            </select>
+
+
+            <!-- =================================================
+                 BUSINESS GOAL
+                 ================================================= -->
+
+            <label for="goal">
+                Business Goal
+            </label>
+
+            <select
+                id="goal"
+                name="goal"
+                required
+            >
+
+                <option value="">
+                    Select Goal
+                </option>
+
+                <option value="Additional Income">
+                    Additional Income
+                </option>
+
+                <option value="Full Time Business">
+                    Full Time Business
+                </option>
+
+                <option value="Business Expansion">
+                    Business Expansion
+                </option>
+
+            </select>
+
+
+            <!-- =================================================
+                 SUBMIT BUTTON
+                 ================================================= -->
+
+            <button type="submit">
+                Analyze Business
+            </button>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Business Analysis
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- =================================================
+         HEADER
+         ================================================= -->
+
+    <div class="header">
+
+        <h1>
+            📊 Business Analysis
+        </h1>
+
+        <p>
+            Personalized analysis for
+            <strong>{{ name }}</strong>
+        </p>
+
+    </div>
+
+
+    <!-- =================================================
+         ENTREPRENEUR PROFILE
+         ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            👤 Entrepreneur Profile
+        </h2>
+
+        <div class="grid">
+
+            <div>
+                <strong>Name</strong>
+                <p>{{ name }}</p>
+            </div>
+
+            <div>
+                <strong>Village</strong>
+                <p>{{ village }}</p>
+            </div>
+
+            <div>
+                <strong>District</strong>
+                <p>{{ district }}</p>
+            </div>
+
+            <div>
+                <strong>State</strong>
+                <p>{{ state }}</p>
+            </div>
+
+            <div>
+                <strong>Business</strong>
+                <p>{{ business }}</p>
+            </div>
+
+            <div>
+                <strong>Investment</strong>
+                <p>₹{{ investment }}</p>
+            </div>
+
+            <div>
+                <strong>Experience</strong>
+                <p>{{ experience }}</p>
+            </div>
+
+            <div>
+                <strong>Goal</strong>
+                <p>{{ goal }}</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         FINANCIAL ANALYSIS
+         ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            💰 Financial Analysis
+        </h2>
+
+        {% if finance %}
+
+        <div class="grid">
+
+            <div>
+                <strong>Required Investment</strong>
+                <p>
+                    ₹{{ finance.required_investment }}
+                </p>
+            </div>
+
+            <div>
+                <strong>Monthly Revenue</strong>
+                <p>
+                    ₹{{ finance.monthly_revenue }}
+                </p>
+            </div>
+
+            <div>
+                <strong>Monthly Expense</strong>
+                <p>
+                    ₹{{ finance.monthly_expense }}
+                </p>
+            </div>
+
+            <div>
+                <strong>Monthly Profit</strong>
+                <p>
+                    ₹{{ finance.monthly_profit }}
+                </p>
+            </div>
+
+            <div>
+                <strong>Annual Profit</strong>
+                <p>
+                    ₹{{ finance.annual_profit }}
+                </p>
+            </div>
+
+            <div>
+                <strong>Funding Gap</strong>
+                <p>
+                    ₹{{ finance.funding_gap }}
+                </p>
+            </div>
+
+            <div>
+                <strong>Profit Margin</strong>
+                <p>
+                    {{ finance.profit_margin }} %
+                </p>
+            </div>
+
+            <div>
+                <strong>ROI</strong>
+                <p>
+                    {{ finance.roi }} %
+                </p>
+            </div>
+
+            <div>
+                <strong>Break-Even</strong>
+                <p>
+
+                    {% if finance.break_even %}
+
+                        {{ finance.break_even }} months
+
+                    {% else %}
+
+                        Not available
+
+                    {% endif %}
+
+                </p>
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <p>
+            Financial analysis unavailable.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         BUSINESS VIABILITY
+         ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            📊 Business Viability Assessment
+        </h2>
+
+        {% if finance %}
+
+        <div class="grid">
+
+            <div>
+
+                <strong>
+                    Viability Score
+                </strong>
+
+                <p>
+                    {{ finance.viability_score }} / 100
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Risk Level
+                </strong>
+
+                <p>
+                    {{ finance.risk_level }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <h3>
+            💡 Financial Recommendation
+        </h3>
+
+        <p>
+            {{ finance.recommendation }}
+        </p>
+
+
+        <h3>
+            💰 Funding Assessment
+        </h3>
+
+        <p>
+            {{ finance.funding_status }}
+        </p>
+
+
+        {% else %}
+
+        <p>
+            Business viability cannot be calculated.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         LOCATION
+         ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            📍 Location Information
+        </h2>
+
+        {% if location %}
+
+        <p>
+            <strong>Location:</strong>
+            {{ location.name }}
+        </p>
+
+        <p>
+            <strong>State:</strong>
+            {{ location.state }}
+        </p>
+
+        <p>
+            <strong>Latitude:</strong>
+            {{ location.latitude }}
+        </p>
+
+        <p>
+            <strong>Longitude:</strong>
+            {{ location.longitude }}
+        </p>
+
+        {% else %}
+
+        <p>
+            Location information unavailable.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         WEATHER
+         ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            🌦️ Weather Information
+        </h2>
+
+        {% if weather %}
+
+        <div class="grid">
+
+            <div>
+                <strong>Temperature</strong>
+                <p>
+                    {{ weather.temperature }} °C
+                </p>
+            </div>
+
+            <div>
+                <strong>Humidity</strong>
+                <p>
+                    {{ weather.humidity }} %
+                </p>
+            </div>
+
+            <div>
+                <strong>Precipitation</strong>
+                <p>
+                    {{ weather.precipitation }} mm
+                </p>
+            </div>
+
+            <div>
+                <strong>Maximum Temperature</strong>
+                <p>
+                    {{ weather.max_temperature }} °C
+                </p>
+            </div>
+
+            <div>
+                <strong>Minimum Temperature</strong>
+                <p>
+                    {{ weather.min_temperature }} °C
+                </p>
+            </div>
+
+            <div>
+                <strong>Rain Forecast</strong>
+                <p>
+                    {{ weather.rain_forecast }} mm
+                </p>
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <p>
+            Weather information unavailable.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         LOCAL MARKET INTELLIGENCE
+         ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            🏪 Local Market Intelligence
+        </h2>
+
+
+        {% if market_data %}
+
+        <p>
+            📍 Market information for
+            <strong>{{ district }}, {{ state }}</strong>
+        </p>
+
+
+        <!-- MARKET DATA TABLE -->
+
+        <div style="overflow-x:auto;">
+
+            <table style="
+                width:100%;
+                border-collapse:collapse;
+                margin-top:15px;
+            ">
+
+                <thead>
+
+                    <tr>
+
+                        <th style="
+                            padding:12px;
+                            border-bottom:1px solid #ddd;
+                            text-align:left;
+                        ">
+                            Commodity
+                        </th>
+
+                        <th style="
+                            padding:12px;
+                            border-bottom:1px solid #ddd;
+                            text-align:left;
+                        ">
+                            Market
+                        </th>
+
+                        <th style="
+                            padding:12px;
+                            border-bottom:1px solid #ddd;
+                            text-align:left;
+                        ">
+                            Price
+                        </th>
+
+                        <th style="
+                            padding:12px;
+                            border-bottom:1px solid #ddd;
+                            text-align:left;
+                        ">
+                            Trend
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for record in market_data %}
+
+                    <tr>
+
+                        <td style="
+                            padding:12px;
+                            border-bottom:1px solid #eee;
+                        ">
+
+                            <strong>
+                                {{ record.commodity }}
+                            </strong>
+
+                        </td>
+
+
+                        <td style="
+                            padding:12px;
+                            border-bottom:1px solid #eee;
+                        ">
+
+                            {{ record.market }}
+
+                        </td>
+
+
+                        <td style="
+                            padding:12px;
+                            border-bottom:1px solid #eee;
+                        ">
+
+                            ₹{{ record.price }}
+
+                            <small>
+                                / {{ record.unit }}
+                            </small>
+
+                        </td>
+
+
+                        <td style="
+                            padding:12px;
+                            border-bottom:1px solid #eee;
+                        ">
+
+                            {% if record.trend == "Rising" %}
+
+                                📈 <strong>Rising</strong>
+
+                            {% elif record.trend == "Falling" %}
+
+                                📉 <strong>Falling</strong>
+
+                            {% else %}
+
+                                ➡️ <strong>{{ record.trend }}</strong>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- MARKET INSIGHT -->
+
+        <h3>
+            💡 Market Insight
+        </h3>
+
+        <p>
+
+            The market information above shows the
+            currently available commodity prices and
+            price trends for your selected location.
+
+            {% if market_data|length > 0 %}
+
+            Based on the available records, you can
+            compare commodities before making a
+            business decision.
+
+            {% endif %}
+
+        </p>
+
+
+        {% else %}
+
+        <p>
+            Local market information is currently unavailable.
+        </p>
+
+        <p>
+            No matching commodity market records were
+            found for the selected business and location.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         AI BUSINESS ADVISOR
+         ================================================= -->
+
+    <div class="card ai-card">
+
+        <h2>
+            🤖 AI-Powered Business Advice
+        </h2>
+
+
+        {% if ai_recommendation %}
+
+        <div class="ai-result">
+
+            <p style="white-space: pre-line;">
+                {{ ai_recommendation }}
+            </p>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="ai-result">
+
+            <p>
+                AI recommendation is unavailable.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         GOVERNMENT SCHEMES
+         ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            🏛️ Recommended Government Schemes
+        </h2>
+
+
+        {% if government_schemes %}
+
+            {% for scheme in government_schemes %}
+
+            <div class="scheme">
+
+                {% if scheme is mapping %}
+
+                    <h3>
+                        {{ scheme.name }}
+                    </h3>
+
+                    {% if scheme.description %}
+
+                    <p>
+                        {{ scheme.description }}
+                    </p>
+
+                    {% endif %}
+
+
+                    {% if scheme.reason %}
+
+                    <p>
+
+                        <strong>
+                            Why it may help:
+                        </strong>
+
+                        {{ scheme.reason }}
+
+                    </p>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <p>
+                        {{ scheme }}
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+
+            <p>
+
+                <small>
+
+                    ⚠️ These are potential scheme
+                    matches. Actual eligibility,
+                    benefits and approval depend
+                    on the official scheme rules
+                    and application process.
+
+                </small>
+
+            </p>
+
+
+        {% else %}
+
+        <p>
+            No matching government schemes
+            were identified.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         MARKET DATA STATUS
+         ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            📈 Market Data Status
+        </h2>
+
+        {% if market_data %}
+
+        <p>
+            ✅ Local commodity market data
+            successfully integrated.
+        </p>
+
+        <p>
+            <strong>
+                Records available:
+            </strong>
+
+            {{ market_data|length }}
+        </p>
+
+        {% else %}
+
+        <p>
+            ⚠️ No local commodity market data
+            is currently available for this
+            business and location.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         FINAL BUSINESS DECISION
+         ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            🎯 Business Decision
+        </h2>
+
+
+        {% if finance %}
+
+            {% if finance.viability_score >= 75 %}
+
+            <p>
+                🟢
+                <strong>
+                    High Potential
+                </strong>
+            </p>
+
+            <p>
+                The current financial assumptions
+                indicate strong business potential.
+                Proper market validation and
+                planning are still recommended.
+            </p>
+
+
+            {% elif finance.viability_score >= 50 %}
+
+            <p>
+                🟡
+                <strong>
+                    Moderate Potential
+                </strong>
+            </p>
+
+            <p>
+                The business shows moderate
+                financial potential. Cost control,
+                funding and market validation
+                should be considered.
+            </p>
+
+
+            {% else %}
+
+            <p>
+                🔴
+                <strong>
+                    Requires Further Evaluation
+                </strong>
+            </p>
+
+            <p>
+                The current assumptions indicate
+                higher financial risk. Review the
+                investment, revenue and operating
+                costs before proceeding.
+            </p>
+
+            {% endif %}
+
+
+        {% else %}
+
+        <p>
+            Business decision cannot be calculated
+            because financial information is
+            unavailable.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         BACK BUTTON
+         ================================================= -->
+
+    <div class="button-container">
+
+        <a href="/">
+            ← Back to Home
+        </a>
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>
