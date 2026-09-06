@@ -285,7 +285,7 @@ def analyze():
     # ========================================================
     # WEATHER
     # ========================================================
-
+    print("LOCATION RESULT FOR WEATHER:", location)
     weather = None
 
     if location:
